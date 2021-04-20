@@ -8,6 +8,7 @@ import AppLoading from 'expo-app-loading';
 
 import { Welcome } from './pages/Welcome';
 import { UserIdentification } from './pages/UserIdentification';
+import { Confirmation } from './pages/Confirmation';
 
 export function App() {
   const [fontsLoaded] = useFonts({
@@ -24,7 +25,8 @@ export function App() {
       <StatusBar />
       <View style={{ height: Constants.statusBarHeight }} />
       {/* <Welcome /> */}
-      <UserIdentification />
+      {/* <UserIdentification /> */}
+      <Confirmation />
     </>
   );
 }
