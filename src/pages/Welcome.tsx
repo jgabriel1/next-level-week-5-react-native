@@ -1,27 +1,38 @@
 import React from 'react';
-import { Text, Image, StyleSheet, SafeAreaView } from 'react-native';
+import {
+  Text,
+  Image,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
+import { Entypo } from '@expo/vector-icons';
+
+import colors from '../styles/colors';
+import fonts from '../styles/fonts';
 
 import wateringImg from '../assets/watering.png';
-import { Button } from '../components/Button';
-import colors from '../styles/colors';
 
 export function Welcome() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>
         Gerencie{'\n'}
-        suas plantas{'\n'}
-        de forma fácil
+        suas plantas de{'\n'}
+        forma fácil
       </Text>
 
-      <Image source={wateringImg} style={styles.image} />
+      <Image source={wateringImg} style={styles.image} resizeMode="contain" />
 
       <Text style={styles.subtitle}>
-        Não esqueça mais de regar suas plantas. {'\n'}
-        Nós cuidamos de lembrar você sempre que precisar.
+        Não esqueça mais de regar suas plantas. Nós cuidamos de lembrar você
+        sempre que precisar.
       </Text>
 
-      <Button title=">" />
+      <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+        <Entypo name="chevron-right" style={styles.buttonIcon} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -30,15 +41,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     paddingVertical: 24,
+    paddingHorizontal: 20,
   },
 
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
+    lineHeight: 36,
     textAlign: 'center',
     color: colors.heading,
+    fontFamily: fonts.heading,
   },
 
   subtitle: {
@@ -46,10 +59,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingHorizontal: 20,
     color: colors.heading,
+    fontFamily: fonts.complement,
   },
 
   image: {
-    width: 292,
-    height: 284,
+    height: Dimensions.get('window').width * 0.7,
+  },
+
+  button: {
+    backgroundColor: colors.green,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 16,
+    marginBottom: 10,
+    height: 56,
+    width: 56,
+  },
+
+  buttonIcon: {
+    color: colors.white,
+    fontSize: 24,
   },
 });
