@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Welcome } from '../pages/Welcome';
 import { UserIdentification } from '../pages/UserIdentification';
 import { Confirmation } from '../pages/Confirmation';
+import { PlantSelect } from '../pages/PlantSelect';
 
 import colors from '../styles/colors';
 
@@ -22,6 +23,7 @@ export function StackRoutes() {
       <Screen name="Welcome" component={Welcome} />
       <Screen name="UserIdentification" component={UserIdentification} />
       <Screen name="Confirmation" component={Confirmation} />
+      <Screen name="PlantSelect" component={PlantSelect} />
     </Navigator>
   );
 }
