@@ -1,5 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 
 import { Header } from '../components/Header';
 import { EnvironmentButton } from '../components/EnvironmentButton';
@@ -35,6 +41,9 @@ export function PlantSelect() {
   const [selectedEnvironment, setSelectedEnvironment] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+
   const fetchEnvironments = async () => {
     const { data } = await api.get('plants_environments', {
       params: {
@@ -46,19 +55,43 @@ export function PlantSelect() {
     setEnvironments([{ key: 'all', title: 'Todos' }, ...data]);
   };
 
-  const fetchPlants = async () => {
+  const fetchPlants = useCallback(async () => {
     const { data } = await api.get('plants', {
       params: {
         _sort: 'name',
         _order: 'asc',
+        _page: currentPage,
+        _limit: 8,
       },
     });
 
-    setPlants(data);
-  };
+    if (!data) {
+      setLoadingMore(true);
+
+      return;
+    }
+
+    if (currentPage > 1) {
+      setPlants(current => [...current, ...data]);
+    } else {
+      setPlants(data);
+    }
+
+    setIsLoading(false);
+    setLoadingMore(false);
+  }, [currentPage]);
 
   const handleSelectEnvironment = (environment: string) => {
     setSelectedEnvironment(environment);
+  };
+
+  const handleFetchMore = async (distance: number) => {
+    if (distance < 1) return;
+
+    setLoadingMore(true);
+    setCurrentPage(current => current + 1);
+
+    await fetchPlants();
   };
 
   const filteredPlants = useMemo(() => {
@@ -77,7 +110,7 @@ export function PlantSelect() {
     fetchPlants().then(() => {
       setIsLoading(false);
     });
-  }, []);
+  }, [fetchPlants]);
 
   if (isLoading) {
     return <Load />;
@@ -120,6 +153,13 @@ export function PlantSelect() {
           )}
           showsVerticalScrollIndicator={false}
           numColumns={2}
+          onEndReachedThreshold={0.1}
+          onEndReached={({ distanceFromEnd }) =>
+            handleFetchMore(distanceFromEnd)
+          }
+          ListFooterComponent={
+            loadingMore ? <ActivityIndicator color={colors.green} /> : null
+          }
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       </View>
