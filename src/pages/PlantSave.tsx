@@ -12,6 +12,7 @@ import { SvgFromUri } from 'react-native-svg';
 import { useRoute } from '@react-navigation/core';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format, isBefore } from 'date-fns';
+import { PlantData, savePlant } from '../libs/storage';
 
 import { Button } from '../components/Button';
 
@@ -21,18 +22,7 @@ import fonts from '../styles/fonts';
 import waterDrop from '../assets/waterdrop.png';
 
 interface PlantSaveRouteParams {
-  plant: {
-    id: string;
-    name: string;
-    about: string;
-    water_tips: string;
-    photo: string;
-    environments: string[];
-    frequency: {
-      times: number;
-      repeat_every: string;
-    };
-  };
+  plant: PlantData;
 }
 
 export function PlantSave() {
@@ -62,6 +52,17 @@ export function PlantSave() {
 
   const handleToggleDatePickerForAndroid = () => {
     setShowDatePicker(current => !current);
+  };
+
+  const handleRegisterPlant = async () => {
+    try {
+      await savePlant({
+        ...plant,
+        dateTimeNotification: selectedDateTime,
+      });
+    } catch {
+      Alert.alert('Ocorreu um erro ao salvar a planta.');
+    }
   };
 
   return (
@@ -106,7 +107,7 @@ export function PlantSave() {
           </TouchableOpacity>
         )}
 
-        <Button title="Cadastrar planta" onPress={() => null} />
+        <Button title="Cadastrar planta" onPress={handleRegisterPlant} />
       </View>
     </View>
   );

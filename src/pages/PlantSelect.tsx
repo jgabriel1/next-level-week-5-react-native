@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+import { PlantData } from '../libs/storage';
 
 import { Header } from '../components/Header';
 import { EnvironmentButton } from '../components/EnvironmentButton';
@@ -23,24 +24,11 @@ interface Environment {
   title: string;
 }
 
-interface Plant {
-  id: string;
-  name: string;
-  about: string;
-  water_tips: string;
-  photo: string;
-  environments: string[];
-  frequency: {
-    times: number;
-    repeat_every: string;
-  };
-}
-
 export function PlantSelect() {
   const navigation = useNavigation();
 
   const [environments, setEnvironments] = useState<Environment[]>([]);
-  const [plants, setPlants] = useState<Plant[]>([]);
+  const [plants, setPlants] = useState<PlantData[]>([]);
   const [selectedEnvironment, setSelectedEnvironment] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -88,7 +76,7 @@ export function PlantSelect() {
     setSelectedEnvironment(environment);
   };
 
-  const handleSelectPlant = (plant: Plant) => {
+  const handleSelectPlant = (plant: PlantData) => {
     navigation.navigate('PlantSave', { plant });
   };
 
