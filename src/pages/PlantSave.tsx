@@ -1,14 +1,24 @@
-import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import {
+  Alert,
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SvgFromUri } from 'react-native-svg';
 import { useRoute } from '@react-navigation/core';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
+import { format, isBefore } from 'date-fns';
 import { Button } from '../components/Button';
 
 import colors from '../styles/colors';
+import fonts from '../styles/fonts';
 
 import waterDrop from '../assets/waterdrop.png';
-import fonts from '../styles/fonts';
 
 interface PlantSaveRouteParams {
   plant: {
@@ -28,6 +38,31 @@ interface PlantSaveRouteParams {
 export function PlantSave() {
   const route = useRoute();
   const { plant } = route.params as PlantSaveRouteParams;
+
+  const [selectedDateTime, setSelectedDateTime] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(Platform.OS === 'ios');
+
+  const handleChangeTime = (_: unknown, dateTime?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(current => !current);
+    }
+
+    if (dateTime && isBefore(dateTime, new Date())) {
+      setSelectedDateTime(new Date());
+
+      Alert.alert('Escolha uma hora no futuro!');
+
+      return;
+    }
+
+    if (dateTime) {
+      setSelectedDateTime(dateTime);
+    }
+  };
+
+  const handleToggleDatePickerForAndroid = () => {
+    setShowDatePicker(current => !current);
+  };
 
   return (
     <View style={styles.container}>
@@ -49,6 +84,27 @@ export function PlantSave() {
         <Text style={styles.alertLabel}>
           Escolha o melhor horário para ser lembrado:
         </Text>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={selectedDateTime}
+            mode="time"
+            display="spinner"
+            onChange={handleChangeTime}
+          />
+        )}
+
+        {Platform.OS === 'android' && (
+          <TouchableOpacity
+            style={styles.dateTimePickerButton}
+            onPress={handleToggleDatePickerForAndroid}
+          >
+            <Text style={styles.dateTimePickerText}>
+              {format(selectedDateTime, 'HH:mm')}
+              <Text style={{ fontSize: 20 }}>{'\n'}Mudar Horário</Text>
+            </Text>
+          </TouchableOpacity>
+        )}
 
         <Button title="Cadastrar planta" onPress={() => null} />
       </View>
@@ -125,5 +181,18 @@ const styles = StyleSheet.create({
     color: colors.heading,
     fontSize: 12,
     marginBottom: 5,
+  },
+
+  dateTimePickerButton: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+
+  dateTimePickerText: {
+    color: colors.heading,
+    fontFamily: fonts.text,
+    fontSize: 24,
+    textAlign: 'center',
   },
 });
