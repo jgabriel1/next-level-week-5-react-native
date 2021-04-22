@@ -13,6 +13,7 @@ export type PlantData = {
     repeat_every: string;
   };
   dateTimeNotification: Date;
+  hour: string;
 };
 
 type StoragePlantData = {

@@ -62,7 +62,8 @@
       }
     ],
     "no-use-before-define": "off",
-    "react/require-default-props": "off"
+    "react/require-default-props": "off",
+    "import/no-duplicates": "off"
   },
   "settings": {
     "import/resolver": {
