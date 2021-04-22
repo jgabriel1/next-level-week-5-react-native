@@ -11,8 +11,8 @@ import {
 import { SvgFromUri } from 'react-native-svg';
 import { useRoute } from '@react-navigation/core';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
 import { format, isBefore } from 'date-fns';
+
 import { Button } from '../components/Button';
 
 import colors from '../styles/colors';
@@ -157,8 +157,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue_light,
     padding: 20,
     borderRadius: 20,
-    marginTop: -64,
-    marginBottom: 64,
   },
 
   tipImage: {
@@ -180,13 +178,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.complement,
     color: colors.heading,
     fontSize: 12,
-    marginBottom: 5,
+    marginTop: 16,
   },
 
   dateTimePickerButton: {
     width: '100%',
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingBottom: 32,
+    paddingTop: 20,
   },
 
   dateTimePickerText: {
