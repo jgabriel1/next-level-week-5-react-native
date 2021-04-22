@@ -6,6 +6,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 
 import { Header } from '../components/Header';
 import { EnvironmentButton } from '../components/EnvironmentButton';
@@ -36,6 +37,8 @@ interface Plant {
 }
 
 export function PlantSelect() {
+  const navigation = useNavigation();
+
   const [environments, setEnvironments] = useState<Environment[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
   const [selectedEnvironment, setSelectedEnvironment] = useState('all');
@@ -83,6 +86,10 @@ export function PlantSelect() {
 
   const handleSelectEnvironment = (environment: string) => {
     setSelectedEnvironment(environment);
+  };
+
+  const handleSelectPlant = (plant: Plant) => {
+    navigation.navigate('PlantSave', { plant });
   };
 
   const handleFetchMore = async (distance: number) => {
@@ -149,6 +156,7 @@ export function PlantSelect() {
             <PlantCardPrimary
               key={String(item.id)}
               data={{ name: item.name, photo: item.photo }}
+              onPress={() => handleSelectPlant(item)}
             />
           )}
           showsVerticalScrollIndicator={false}
