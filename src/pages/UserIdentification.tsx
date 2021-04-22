@@ -11,6 +11,7 @@ import {
   Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Button } from '../components/Button';
 
@@ -31,8 +32,10 @@ export function UserIdentification() {
     setIsInputFocused(true);
   };
 
-  const handleSubmitUserName = () => {
+  const handleSubmitUserName = async () => {
     if (!name) return;
+
+    await AsyncStorage.setItem('@Plantmanager:username', name);
 
     navigation.navigate('Confirmation');
   };
