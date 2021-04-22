@@ -32,6 +32,8 @@ export function UserIdentification() {
   };
 
   const handleSubmitUserName = () => {
+    if (!name) return;
+
     navigation.navigate('Confirmation');
   };
 
@@ -65,7 +67,11 @@ export function UserIdentification() {
               />
 
               <View style={styles.footer}>
-                <Button title="Confirmar" onPress={handleSubmitUserName} />
+                <Button
+                  title="Confirmar"
+                  onPress={handleSubmitUserName}
+                  disabled={!name}
+                />
               </View>
             </View>
           </View>
