@@ -16,7 +16,7 @@ export type PlantData = {
   hour: string;
 };
 
-type StoragePlantData = {
+export type StoragePlantData = {
   [id: string]: {
     data: PlantData;
   };
@@ -62,6 +62,22 @@ export const loadAllPlants = async (): Promise<PlantData[]> => {
       );
 
     return sortedPlants;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const removePlant = async (plant: PlantData) => {
+  try {
+    const data = await AsyncStorage.getItem(PLANTS_STORAGE_KEY);
+    const storedPlants = data ? (JSON.parse(data) as StoragePlantData) : {};
+
+    delete storedPlants[plant.id];
+
+    await AsyncStorage.setItem(
+      PLANTS_STORAGE_KEY,
+      JSON.stringify(storedPlants),
+    );
   } catch (err) {
     throw new Error(err);
   }

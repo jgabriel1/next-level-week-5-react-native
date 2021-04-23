@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, Text, FlatList } from 'react-native';
+import { StyleSheet, View, Image, Text, FlatList, Alert } from 'react-native';
 import { formatDistance } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { loadAllPlants, PlantData } from '../libs/storage';
+import { loadAllPlants, PlantData, removePlant } from '../libs/storage';
 
 import { Header } from '../components/Header';
 import { PlantCardSecondary } from '../components/PlantCardSecondary';
@@ -35,6 +35,27 @@ export function MyPlants() {
     setIsLoading(false);
   };
 
+  const handleRemovePlant = async (plant: PlantData) => {
+    Alert.alert('Remover', `Deseja remover a ${plant.name}?`, [
+      {
+        text: 'Não',
+        style: 'cancel',
+      },
+      {
+        text: 'Sim',
+        onPress: async () => {
+          try {
+            await removePlant(plant);
+
+            setPlants(current => current.filter(p => p.id !== plant.id));
+          } catch {
+            Alert.alert('Não foi possível remover.');
+          }
+        },
+      },
+    ]);
+  };
+
   useEffect(() => {
     loadStoredData();
   }, []);
@@ -59,7 +80,12 @@ export function MyPlants() {
         <FlatList
           data={plants}
           keyExtractor={plant => String(plant.id)}
-          renderItem={({ item }) => <PlantCardSecondary data={item} />}
+          renderItem={({ item }) => (
+            <PlantCardSecondary
+              data={item}
+              onRemove={() => handleRemovePlant(item)}
+            />
+          )}
           showsVerticalScrollIndicator={false}
         />
       </View>
